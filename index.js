@@ -4,43 +4,34 @@ const fs = require("fs");
 const port = 8000;
 
 const server = http.createServer((req, res) => {
-  if (req.url === "/") {
+  const url = req.url;
+  const method = req.method;
+  if (url === "/" ) {
     fs.readFile("index.html", (err, data) => {
-      if (err) throw err;
-      res.writeHead(200, {
-        "Content-Type": "text/html",
-      });
+      res.writeHead(200, {"Content-Type": "text/html"});
       res.write(data);
-      res.end();
+      return res.end();
     });
-    } else if (req.url === "/about") {
+    }
+    if (req.url === "/about" && method === "GET") {
         fs.readFile("about.html", (err, data) => {
-            if (err) throw err;
-            res.writeHead(200, {
-              "Content-Type": "text/html",
-            });
+            res.writeHead(200, {"Content-Type": "text/html"});
             res.write(data);
-            res.end();
-          });
-    } else if (req.url === "/contact") {
-        fs.readFile("contact.html", (err, data) => {
-            if (err) throw err;
-            res.writeHead(200, {
-              "Content-Type": "text/html",
-            });
-            res.write(data);
-            res.end();
-          });
-    } else {
-        fs.readFile("error.html", (err, data) => {
-            if (err) throw err;
-            res.writeHead(200, {
-              "Content-Type": "text/html",
-            });
-            res.write(data);
-            res.end();
+            return res.end();
           });
     }
+    if (req.url === "/contact" && method === "GET") {
+        fs.readFile("contact.html", (err, data) => {
+            res.writeHead(200, {"Content-Type": "text/html"});
+            res.write(data);
+            return res.end();
+          });
+    }
+    fs.readFile("error.html", (err, data) => {
+        res.writeHead(200, {"Content-Type": "text/html"});
+        res.write(data);
+        return res.end();
+    });
 });
 
 server.listen(port, () => {
